@@ -15,12 +15,12 @@ import {
 import Currency from "./component/currency";
 import Countries from "./component/countries";
 import { Schema } from "./shared/validation";
-import { isAnOPECCountry } from "./utils/helpers";
+import { isAnOPECCountry, getMinStartDate } from "./utils/helpers";
 
 let maxLength = 150;
 
 const Form = () => {
-  const MIN_DATE = useMemo(() => new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), []);
+  const MIN_DATE = useMemo(() => getMinStartDate(), []);
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +38,8 @@ const Form = () => {
   } = useForm({
     resolver: yupResolver(Schema()),
   });
+
+  const disabled = useMemo(() => loading || isSubmitting, [loading, isSubmitting]);
 
   // Submit Button
   const onSubmit = (data) => {
@@ -98,6 +100,7 @@ const Form = () => {
                 type="text"
                 placeholder="Enter First Name"
                 {...register("name")}
+                disabled={disabled}
               />
             </div>
             {errors.name && (
@@ -124,6 +127,7 @@ const Form = () => {
                 type="text"
                 placeholder="Enter Sur Name"
                 {...register("surname")}
+                disabled={disabled}
               />
             </div>
             {errors.surname && (
@@ -146,6 +150,7 @@ const Form = () => {
             maxLength={maxLength}
             rows={4}
             onChange={handleDescriptionChange}
+            disabled={disabled}
             placeholder="Enter maximum 150 characters."
           />
           <span className="text-gray-500 text-xs float-right">
@@ -172,6 +177,7 @@ const Form = () => {
             placeholder="ABCD-1234"
             className="placeholder-gray-400 appearance-none  rounded-lg  border text-gray-900  block flex-1 min-w-0 w-full text-sm p-2.5   border-gray-600 placeholder-gray-400   outline-0 outline-black"
             {...register("projectCode")}
+            disabled={disabled}
           />
           <p className="text-gray-500 text-xs ">
             *Note: example code is like pattern “HSLD-3465”
@@ -184,8 +190,8 @@ const Form = () => {
         </div>
 
         <div className="flex flex-wrap -mx-3">
-          <Countries errors={errors} watch={watch} register={register} />
-          <Currency isSubmitting={isSubmitting} errors={errors} watch={watch} register={register} />
+          <Countries isSubmitting={disabled} errors={errors} watch={watch} register={register} />
+          <Currency isSubmitting={disabled} errors={errors} watch={watch} register={register} />
           <div className="w-full md:flex-1 px-3 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               Payment Amount
@@ -199,6 +205,7 @@ const Form = () => {
                 {...register("paymentAmount")}
                 type="number"
                 placeholder="Enter Payment Amount"
+                disabled={disabled}
               />
             </div>
             {errors.paymentAmount && (
@@ -217,6 +224,7 @@ const Form = () => {
               className={`placeholder-gray-400 appearance-none rounded-lg ${watch("validityPeriod") ? "text-gray" : "text-gray-400"
                 } border block flex-1 min-w-0 w-full text-sm p-2.5   border-gray-600 placeholder-gray-400   outline-0 outline-black`}
               {...register("validityPeriod")}
+              disabled={disabled}
             >
               <option value="">Select Year</option>
               <option value="1">1</option>
@@ -255,6 +263,7 @@ const Form = () => {
               }
               selected={watch("startDate")}
               minDate={MIN_DATE}
+              disabled={disabled}
             />
             {errors.startDate && (
               <p className="text-red-500 text-xs italic">
@@ -265,13 +274,13 @@ const Form = () => {
         </div>
         <button
           type="submit"
-          disabled={loading}
-          className={`text-sm text-center appearance-none rounded-full  transition duration-300 w-full mt-4 py-3 bg-[#ffc605] text-gray text-base font-semibold ${loading ? "disabled:opacity-50 disabled:cursor-not-allowed" : ""
+          disabled={disabled}
+          className={`text-sm text-center appearance-none rounded-full  transition duration-300 w-full mt-4 py-3 bg-[#ffc605] text-gray text-base font-semibold ${disabled ? "disabled:opacity-50 disabled:cursor-not-allowed" : ""
             }`}
         >
-          {loading ? "Loading..." : "Submit"}
+          {disabled ? "Loading..." : "Submit"}
 
-          {loading && (
+          {disabled && (
             <FontAwesomeIcon icon={faSpinner} spin className="mx-1" />
           )}
         </button>

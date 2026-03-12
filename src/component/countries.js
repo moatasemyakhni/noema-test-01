@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react"
 
-const Countries = ({ register, watch, errors }) => {
+const Countries = ({ register, watch, errors, isSubmitting }) => {
 	const [countries, setCountries] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -55,7 +55,7 @@ const Countries = ({ register, watch, errors }) => {
 						{...register("country")}
 						className={` appearance-none text-center rounded-r-lg border border-gray-300 ${watch("country") ? "text-gray" : "text-gray-400"
 							} disabled:bg-gray-300 block  min-w-0 w-full text-sm p-2.5 border-gray-600 outline-0 outline-black`}
-						disabled={false}
+						disabled={isSubmitting}
 					>
 						<option value="">Select Country</option>
 						{countries.map((country) => {
