@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { isAnOPECCountry, OPEC_COUNTRIES } from "../utils/helpers";
+import { isAnOPECCountry } from "../utils/helpers";
 
 export const Schema = () => {
   const minDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);

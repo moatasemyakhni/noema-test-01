@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "react-datepicker/dist/react-datepicker.css";
@@ -74,7 +74,7 @@ const Form = () => {
     }
 
 
-  }, [selectedCountry]);
+  }, [selectedCountry, setError, setValue, setFocus, clearErrors]);
 
   return (
     <div className="flex flex-col items-start mb-6 px-4 md:px-10 py-6 shadow-md rounded-lg border border-gray-100 max-w-[34rem]">
